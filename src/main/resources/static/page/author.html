@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<script src="../js/vue/vue.js" charset="utf-8"></script>
+<!-- 引入组件库 -->
+<script src="../js/elementUI/lib/index.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="../js/elementUI/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="../js/elementUI/lib/theme-chalk/display.css">
+<style>
+	.head {
+        padding: 10px 0;
+        background-color: #f9fafc;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+    		font-weight: lighter;
+	}
+	.info{
+		color: grey;
+	}
+	.el-tabs__item {
+		font-size: 20px;
+	}
+	.tabs{
+		margin-left: 40px;
+	}
+	.image {
+	    width: 100%;
+	    height: 250px;
+	    display: block;
+	  }
+</style>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+			<div class="head">
+				<el-row >                                
+	                <el-col :span="8" :offset="2">
+	                    <div>
+	                        <el-row >
+	                            <el-col :span="8">
+	                                <div><img style="width: 150px; height: 150px; border-radius:50%; 
+	                                    overflow:hidden;" src="../img/test.jpg"></div>
+	                            </el-col>
+	                            <el-col :span="16">
+	                                    <el-row>
+	                                        <el-col :span="24">
+	                                            <h2>我叫作者</h2>
+	                                        </el-col>
+	                                    </el-row>
+	                                    <el-row class="info">
+	                                            <span>XXX公安局</span>
+	                                    </el-row>
+	                                    <el-row>
+											<span class="info">5&nbsp;发布数据流</span>
+	                                    </el-row> 
+	                            </el-col>
+	                        </el-row>
+	                    </div>
+	                </el-col>                  
+	            </el-row> 
+     	 	</div>   
+     	 	<el-row>
+     	 		<el-col >
+     	 			<el-tabs >
+	     	 			<el-tab-pane class="tabs" label="发布的数据流" >
+	     	 			</el-tab-pane>
+	     	 		</el-tabs>
+     	 		</el-col>
+     	 	</el-row>
+     	 	<el-row>
+			  <el-col :span="5" v-for="(o, index) in 12" :key="o" :offset="index%3 ==  2 ? 3 : 2" style="margin-bottom: 20px;">
+			    <el-card :body-style="{ padding: '0px' }">
+			      <img src="../img/test.jpg" class="image">
+			      <div style="padding: 14px;">
+			      	<el-row>
+			      		<el-col :span="8">
+			      			<span>数据流名称</span>
+			      		</el-col>
+			      		<el-col :span="11" :offset="5">
+			      			<el-rate
+							    v-model="ratevalue"
+							    :colors="colors" allow-half='true'>
+							  </el-rate>
+			      		</el-col>
+			      		
+			      	</el-row>
+			        
+			          
+					  <template >
+						  <div>
+						  	<span class="streaminfo">浏览:10</span>
+						    <el-divider direction="vertical"></el-divider>
+						    <span class="streaminfo">评论:10</span>
+						    <el-divider direction="vertical"></el-divider>
+						    <span class="streaminfo">收藏:10</span>
+						    <el-divider direction="vertical"></el-divider>
+						    <span class="streaminfo">点赞:10</span>
+						  </div>
+					</template>
+			       </div>
+			    </el-card>
+			  </el-col>
+			</el-row>
+			<el-row>
+				<el-col :offset="8">
+					<div class="block">
+					    <el-pagination
+					      @size-change="handleSizeChange"
+					      @current-change="handleCurrentChange"
+					      :current-page="currentPage4"
+					      :page-size="10"
+					      layout="total, prev, pager, next, jumper"
+					      :total="400">
+					    </el-pagination>
+			  		</div>
+				</el-col>
+			
+			</el-row>
+		</div>
+	
+	</body>
+	<script>
+		new Vue({
+			el:"#app",
+			data(){
+				return{
+					ratevalue:4.4
+				}
+			}
+		});
+	</script>
+	
+</html>

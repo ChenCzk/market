@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>评论</title>
+		
+		
+	<script src="../js/vue/vue.js" charset="utf-8"></script>
+	<script src="../js/vue/vue-router.js" charset="utf-8"></script>
+	<style>
+		.time {
+			text-align:right;
+			margin-top:1em;
+			color:#333;
+		}
+		.commentBox {
+			margin: 20px;
+		}
+		.commentBox h3 {
+			color: #634322;
+			background: #e9e5df;
+			padding: 8px 15px;
+			text-align: left;
+			font-size: 16px;
+		}
+		.comment {
+			margin-bottom: 15px;
+		}
+		.comment b {
+			color: #01553D;
+			font-size: 16px;
+			display: block;
+			margin: 5px 0;
+		}
+		.comment b span {
+			color: #333;
+			font-size: 14px;
+			margin-left: 20px;
+		}
+		.comment p {
+			font-size: 16px;
+			color: #333;
+		}
+		.comment + .comment, .reply + .reply {
+			border-top: 1px solid #ccc;
+		}
+		.commentBox textarea {
+			overflow: auto;
+			width: 100%;
+			height: 95px;
+			outline: none;
+			resize: none;
+		}
+		.commentBox button {
+			float: right;
+			margin-left: 20px;
+			padding: 5px 30px;
+			background: #01553D;
+			border-radius: 5px;
+			color: #fff;
+			font-size: 16px;
+		}
+		.commentBox button:hover {
+			color: #fff;
+			background: #047857;
+		}
+		.reply {
+			margin: 15px 0 15px 50px;
+		}
+	</style>
+	</head>
+	<body>
+		<div id="comment">
+			<article-content v-bind:article="article"></article-content>
+			<comment-content v-bind:comment="comment" v-on:change="changCommmer"></comment-content>
+			<comment-textarea v-bind:type="type" v-bind:name="oldComment" v-on:submit="addComment" v-on:canel="canelCommit"></comment-textarea>
+		</div>
+	</body>
+	
+	<script>
+		Vue.component('commentTextarea',{
+			template:'\
+			<div class="commentBox">\
+			<h3>发表评论</h3>\
+			<b v-if="type">你回复 {{name}}</b>\
+			<textarea name="" value="请填写评论内容" v-model="commentText"></textarea>\
+			<button class="btn" @click="addComment">发表</button>\
+			<button class="btn" @click="canelComment">取消</button>\
+			</div>',
+			props: ['type','name'],
+			data: function(){
+				return {commentText:""}
+			},
+			methods: {
+				addComment: function(){
+					this.$emit("submit",this.commentText);
+					this.commentText="";
+				},
+				canelComment: function(){
+					this.$emit("canel");
+					this.commentText = "";
+				}
+			}
+		});
+		
+		Vue.component('comment-content',{
+			template:'\
+			<div class="commentBox">\
+				<h3>评论</h3>\
+				<p v-if="comment.length==0">暂无评论，我来发表第一篇评论</p>\
+				<div v-else>\
+					<div class="comment" v-for="(item,index) in comment" v-bind:index="index">\
+						<b>{{item.name}}<span>{{item.time}}</span></b>\
+						<p @click="changeCommenter(item.name,index)">{{item.content}}</p>\
+						<div v-if="item.reply.length>0">\
+							<div class="reply" v-for="reply in item.reply">\
+								<b>{{reply.responder}} 回复 {{reply.reviewers}}<span>{{reply.time}}</span></b>\
+								<p @click="changeCommenter(reply.responder,index)">{{reply.content}}</p>\
+							</div>\
+						</div>\
+					</div>\
+				</div>\
+			</div>',
+			props: ['comment'],
+			methods: {
+				changeCommenter: function(name,index){
+					this.$emit("change",name,index);
+				}
+			}
+		});
+		
+		var comment = new Vue({
+			el: "#comment",
+			data: {
+				commenter: "大米", //评论人
+				type: 0,          //0为评论作者1为评论别人的评论
+				oldComment: null, //旧评论者的名字(实际存id)
+				chosedIndex: -1,  //被选中的评论index
+				article: {
+					title: "枸杞当归",
+					time: "2020-09-10",
+					read: 50,
+					content: ""
+				},
+				comment: [
+					{
+						name: "大米1号",
+						time: "2020-09-10",
+						content: "好的。马上",
+						reply: [
+							{
+								responder: "大米2号",
+								reviewers: "大米1号",
+								time: "2020-09-10",
+								content: "您说的对"
+							}
+						]
+					}
+				]    //评论内容
+			},
+			methods: {
+				// 添加评论
+				addComment:function(data){
+					if(this.type == 0){
+						this.comment.push({
+							name: '大米',
+							time: "2020-09-10",
+							content: data,
+							reply: []
+						});
+					}else if(this.type == 1){
+						this.comment[this.chosedIndex].reply.push({
+							responder: '小米',
+							reviewers: this.comment[this.chosedIndex].name,
+							time: "2020-09-10",
+							content: data
+						});
+						this.type = 0;
+					}
+				},
+				//监听到了点击别人的评论
+				changCommmer: function(name,index){
+					this.oldComment = name;
+					this.chosedIndex = index;
+					this.type = 1;
+				},
+				//监听到了取消评论
+				canelCommit:function(){
+					this.type = 0;
+				}
+			}
+		})
+	</script>
+</html>

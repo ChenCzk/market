@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<script src="../js/vue/vue.js" charset="utf-8"></script>	
+<!-- 引入组件库 -->
+<script src="../js/elementUI/lib/index.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="../js/elementUI/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="../js/elementUI/lib/theme-chalk/display.css">
+<!-- <link rel="stylesheet" type="text/css" href="../css/style.css"> -->
+<style>
+	.head {
+        padding: 10px 0;
+        background-color: #f9fafc;
+        margin-bottom: 10px;
+    }
+    .el-divider--vertical {
+	    display: inline-block;
+	    width: 2px;
+	    height: 3em;
+	    margin: 0 8px;
+	    vertical-align: middle;
+	    position: relative;
+	}
+	.info{
+		font-size: 16px;
+		color: grey;
+		margin: 4px;
+	}
+	.el-button.is-round {
+	    padding: 8px 30px;
+	}
+	.el-button {
+		margin: 4px;
+	}
+	.streaminfo{
+		margin: 10px;
+	}
+	.el-carousel__item h3 {
+	    color: #475669;
+	    font-size: 14px;
+	    opacity: 0.75;
+	    line-height: 200px;
+	    margin: 0;
+	  }
+	  
+	  .el-carousel__item:nth-child(2n) {
+	    background-color: #99a9bf;
+	  }
+	  
+	  .el-carousel__item:nth-child(2n+1) {
+	    background-color: #d3dce6;
+	   }
+	   .el-image__error, .el-image__inner, .el-image__placeholder {
+	    width: 100%;
+	    height: 400px;
+	}
+	.divider {
+	    display: block;
+	    height: 4px;
+	    width: 100%;
+	    margin: 24px 0;
+	}
+	.message{
+		margin-top: 15px;
+	}
+	.time {
+		text-align:right;
+		margin-top:1em;
+		color:#333;
+	}
+	.commentBox {
+		margin: 20px;
+	}
+	.commentBox h3 {
+		color: #634322;
+		background: #e9e5df;
+		padding: 8px 15px;
+		text-align: left;
+		font-size: 16px;
+	}
+	.comment {
+		margin-bottom: 15px;
+	}
+	.comment b {
+		color: #01553D;
+		font-size: 16px;
+		display: block;
+		margin: 5px 0;
+	}
+	.comment b span {
+		color: #333;
+		font-size: 14px;
+		margin-left: 20px;
+	}
+	.comment p {
+		font-size: 16px;
+		color: #333;
+	}
+	.comment + .comment, .reply + .reply {
+		border-top: 1px solid #ccc;
+	}
+	.commentBox textarea {
+		overflow: auto;
+		width: 100%;
+		height: 95px;
+		outline: none;
+		resize: none;
+	}
+	.commentBox button {
+		float: right;
+		margin-left: 20px;
+		padding: 5px 30px;
+		background: #01553D;
+		border-radius: 5px;
+		color: #fff;
+		font-size: 16px;
+	}
+	.commentBox button:hover {
+		color: #fff;
+		background: #047857;
+	}
+	.reply {
+		margin: 15px 0 15px 50px;
+	}
+</style>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>数据流模型</title>
+		  
+	        
+	</head>
+	<body>
+		<div id="app" style="background-color:#F4F4F5">
+			<h1 align="center">XXXXX模型名称</h1>
+			<el-row type="flex" align="middle">
+				<el-col :span="6">
+					
+				</el-col>
+				<el-col :span="8">
+					<el-row type="flex" justify="end">
+						<el-button type="primary">打开数据流</el-button>
+					</el-row>
+				</el-col>
+				<el-col :span="4" >
+					<el-row type="flex" justify="end">
+						<font class="info">50次浏览</font>
+					</el-row>
+					<el-row type="flex" justify="end">
+						<font class="info">10人收藏</font>
+					</el-row>
+				</el-col>
+					<el-divider direction="vertical" content-position="center"></el-divider>
+				<el-col :span="6" >
+					<el-row type="flex" justify="start" >
+						<el-rate
+							v-model="ratevalue"
+						    :colors="colors" allow-half="true">
+						</el-rate>
+					</el-row>
+					<el-row type="flex" justify="start">
+						<div v-show="isauthor">
+							<el-button type="primary" round>编辑</el-button>
+						</div>
+						<div v-show="!isauthor" align="center">
+							<el-button type="primary" round>收藏</el-button>
+						</div>
+					</el-row>
+					
+				</el-col>
+				
+			</el-row>
+			<div class="streaminfo">
+				<el-row >
+				<el-col :span="6">
+				<font class="info">作者：<a href="#">xxx</a></font>
+				</el-col>
+				<el-col :span="6">
+				<font class="info">所属单位：广州禁毒支队</a></font>
+				</el-col>
+				<el-col :span="6">
+				<font class="info">发布时间：2020-09-07</font>
+				</el-col>
+			</el-row>
+			</div>	
+			<el-divider></el-divider>
+			<el-row>
+				<el-col :span="20" :offset="2">
+					<template>
+					  <el-carousel :interval="4000" type="card" height="400px">
+					    <el-carousel-item v-for="item in 6" :key="item">
+					      <el-image src="../img/test.jpg" fit="fill" ></el-image>
+					    </el-carousel-item>
+					  </el-carousel>
+					</template>
+				</el-col>
+			</el-row>
+			<el-divider></el-divider>
+			<el-row>
+				<input id="document" type="file" v-on:click="change()" />
+				
+				<div id="output" style="min-height: 400px;"> word文档展示区
+				</div>
+			</el-row>
+			<el-divider class="divider"></el-divider>
+			<el-row>
+				<comment-content v-bind:comment="comment" v-on:change="changCommmer"></comment-content>
+				<comment-textarea v-bind:type="type" v-bind:name="oldComment" v-on:submit="addComment" v-on:canel="canelCommit"></comment-textarea>
+			</el-row>
+			<el-divider class="divider"></el-divider>
+			
+			
+		</div>
+		
+		<script src="../js/mammoth.browser.js"></script>
+	</body>
+	
+	<script>
+		
+		Vue.component('commentTextarea',{
+			template:'\
+			<div class="commentBox">\
+			<h3>发表评论</h3>\
+			<b v-if="type">你回复 {{name}}</b>\
+			<textarea name="" value="请填写评论内容" v-model="commentText"></textarea>\
+			<button class="btn" @click="addComment">发表</button>\
+			<button class="btn" @click="canelComment">取消</button>\
+			</div>',
+			props: ['type','name'],
+			data: function(){
+				return {commentText:""}
+			},
+			methods: {
+				addComment: function(){
+					this.$emit("submit",this.commentText);
+					this.commentText="";
+				},
+				canelComment: function(){
+					this.$emit("canel");
+					this.commentText = "";
+				}
+			}
+		});
+		
+		Vue.component('comment-content',{
+			template:'\
+			<div class="commentBox">\
+				<h3>评论</h3>\
+				<p v-if="comment.length==0">暂无评论，我来发表第一篇评论</p>\
+				<div v-else>\
+					<div class="comment" v-for="(item,index) in comment" v-bind:index="index">\
+						<b>{{item.name}}<span>{{item.time}}</span></b>\
+						<p @click="changeCommenter(item.name,index)">{{item.content}}</p>\
+						<div v-if="item.reply.length>0">\
+							<div class="reply" v-for="reply in item.reply">\
+								<b>{{reply.responder}} 回复 {{reply.reviewers}}<span>{{reply.time}}</span></b>\
+								<p @click="changeCommenter(reply.responder,index)">{{reply.content}}</p>\
+							</div>\
+						</div>\
+					</div>\
+				</div>\
+			</div>',
+			props: ['comment'],
+			methods: {
+				changeCommenter: function(name,index){
+					this.$emit("change",name,index);
+				}
+			}
+		});
+		
+		
+		
+		new Vue({
+			el:'#app',
+			data: {
+					colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+					ratevalue:4.6,
+					isauthor:false,
+					commenter: "大米", //评论人
+					type: 0,          //0为评论作者1为评论别人的评论
+					oldComment: null, //旧评论者的名字(实际存id)
+					chosedIndex: -1,  //被选中的评论index
+					comment: [
+						{
+							name: "大米1号",
+							time: "2020-09-10",
+							content: "好的。马上",
+							reply: [
+								{
+									responder: "大米2号",
+									reviewers: "大米1号",
+									time: "2020-09-10",
+									content: "您说的对"
+								}
+							]
+						}
+					]    //评论内容
+			},
+			methods:{
+				change:function(){
+					document.getElementById("document")
+					.addEventListener("change", handleFileSelect, false);
+					function handleFileSelect(event) {
+						readFileInputEventAsArrayBuffer(event, function(arrayBuffer) {
+							mammoth.convertToHtml({arrayBuffer: arrayBuffer})
+								.then(displayResult)
+								.done();
+						});
+					}
+					function displayResult(result) {
+						document.getElementById("output").innerHTML = result.value;
+					   
+					}
+					function readFileInputEventAsArrayBuffer(event, callback) {
+						var file = event.target.files[0];
+						var reader = new FileReader();
+						reader.onload = function(loadEvent) {
+							var arrayBuffer = loadEvent.target.result;
+							callback(arrayBuffer);
+						};
+						reader.readAsArrayBuffer(file);
+					}
+				},
+				// 添加评论
+				addComment:function(data){
+					if(this.type == 0){
+						this.comment.push({
+							name: '大米',
+							time: getTime(),
+							content: data,
+							reply: []
+						});
+					}else if(this.type == 1){
+						this.comment[this.chosedIndex].reply.push({
+							responder: '小米',
+							reviewers: this.comment[this.chosedIndex].name,
+							time: getTime(),
+							content: data
+						});
+						this.type = 0;
+					}
+				},
+				//监听到了点击别人的评论
+				changCommmer: function(name,index){
+					this.oldComment = name;
+					this.chosedIndex = index;
+					this.type = 1;
+				},
+				//监听到了取消评论
+				canelCommit:function(){
+					this.type = 0;
+				}
+			}
+		});
+		
+		
+		function getTime(){
+			var now = new Date();
+			var year = now.getFullYear();
+			var month = now.getMonth()+1+"";
+			var day = now.getDate()+"";
+			if(month.length == 1){
+				month = "0"+ month;
+			}  
+			if(day.length == 1){
+				day = "0"+ day;
+			}
+			return year+"-"+month+"-"+day;
+		}
+	</script>
+</html>
