@@ -5,13 +5,6 @@ spring:
     password: 123
     username: root
     url: jdbc:mysql://localhost:3306/marketdb?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
-  devtools:
-    restart:
-      enabled: true  #设置开启热部署
-      additional-paths: com.example.market #重启目录
-      exclude: WEB-INF/**
-    freemarker:
-      cache: false    #页面不加载缓存，修改即时生效
 server:
   port: 8080
 
@@ -20,6 +13,4 @@ mybatis:
   type-aliases-package: com.example.market.domain
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-
 

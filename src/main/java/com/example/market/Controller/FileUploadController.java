@@ -2,17 +2,20 @@ package com.example.market.Controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.market.dao.FileUploadDao;
+import com.example.market.domain.market.MarketProject;
 import com.example.market.service.FileUploadDaoService;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -27,6 +30,13 @@ public class FileUploadController {
         return "/page/upload.html";
     }
 
+
+    @RequestMapping("/uploadALL")
+    @ResponseBody
+    public String uploadALL(MarketProject marketProject){
+        System.out.println(marketProject);
+        return null;
+    }
 
     /*
      * 入库 图片

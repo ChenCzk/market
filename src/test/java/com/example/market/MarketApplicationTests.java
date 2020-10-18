@@ -19,8 +19,7 @@ class MarketApplicationTests {
 
     @Test
     void contextLoads() {
-      //  byte[] photo = (byte[]) dao.getPhotoByID("14ec806f-eb28-4b9d-9a62-2a42ff298197");
-       byte[] photo = (byte[]) dao.getWordByID("334cf1bf-2cd6-4ef2-9ff8-3c1aff8f0e56");
+        byte[] photo = (byte[]) dao.getPhotoByID("cbd52323-7933-4f7e-89d1-bf0e9389ffa9");
 
         BASE64Encoder encoder = new BASE64Encoder();
         String image = encoder.encode(photo);

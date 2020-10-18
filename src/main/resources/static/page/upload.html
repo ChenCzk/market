@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<script src="../js/vue/vue.js" charset="utf-8" xmlns:v-on="http://www.w3.org/1999/xhtml"></script>
+<script src="../js/vue/vue.js" charset="utf-8"></script>
 <!-- 引入组件库 -->
 <script src="../js/elementUI/lib/index.js"></script>
 <!-- 引入样式 -->
@@ -14,23 +14,18 @@
 <body>
 <div id="app">
     <el-button type="text" @click="dialogFormVisible = true">数据流发布</el-button>
-
     <el-dialog title="数据流介绍" :visible.sync="dialogFormVisible">
-        <el-form :model="uploadData">
+        <el-form :model="form">
             <el-form-item label="数据流名称" :label-width="formLabelWidth">
-                <el-input v-model="uploadData.MarketProjectName" autocomplete="off"></el-input>
+                <el-input v-model="form.name" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="数据流图标" :label-width="formLabelWidth">
                 <el-upload
-                        class="upload-demo"
-                        action="/uploadIcon"
+                        action=""
                         list-type="picture-card"
-                        accept=".jpg,.png"
-                        :limit="1"
-                        :before-upload="BeforeUpLoad"
-                        :on-success="OnIconSuccess"
-                        :on-remove="OnIconRemove"
-                        :on-exceed="iconTip">
+                        :on-preview="handlePictureCardPreview"
+                        limit="1"
+                        :on-remove="handleRemove">
                     <i class="el-icon-plus"></i>
                 </el-upload>
                 <el-dialog :visible.sync="dialogVisible">
@@ -39,132 +34,86 @@
             </el-form-item>
             <el-form-item label="数据流展示图片" :label-width="formLabelWidth">
                 <el-upload
-                        multiple
                         class="upload-demo"
                         action="/uploadPhoto"
-                        accept=".jpg,.png"
-                        list-type="picture"
-                        :limit="6"
                         :before-upload="BeforeUpLoad"
-                        :on-success="OnPhotoSuccess"
-                        :on-remove="OnPhotoRemove"
+                        :on-success="OnSuccess"
+                        :on-remove="OnRemove"
+                        :file-list="fileList"
+                        list-type="picture"
+                        limit="6"
                         :on-exceed="tip">
                     <el-button size="small" type="primary">上传图片</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，不超过500kb,最多6张</div>
                 </el-upload>
             </el-form-item>
             <el-form-item label="数据流介绍文档" :label-width="formLabelWidth">
-                <!-- <el-upload accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document" list-type="wordList"
-                    action="/uploadWord" >
+                <!-- <el-upload accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document" list-type="text"
+                    action="https://jsonplaceholder.typicode.com/posts/" >
                 <el-button id="document" v-on:click="change()" size="small" type="primary">上传文件</el-button>
-                </el-upload>-->
+                </el-upload> -->
                 <input id="document"
                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                       type="file"
-                       action="/uploadWord"
-                       v-on:click="change()"
-                />
+                       type="file" v-on:click="change()"/>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="FinalSubmit">确 定</el-button>
+            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
         </div>
     </el-dialog>
 </div>
 <script src="../js/mammoth.browser.js"></script>
 
-
+<div id="myapp">
+    <img :src="test"/>
+    <button @click="Myclick()">asdadsadsdaa</button>
+</div>
 </body>
-<script src="../js/axios/axios.min.js"></script>
+
 <script>
-    var UploadVue = new Vue({
+    var vue1 = new Vue({
         el: "#app",
         data: {
+            dialogTableVisible: false,
             dialogFormVisible: false,
-            formLabelWidth: '120px',
-            uploadData:{
-                MarketProjectID:"",
-                MarketProjectName: '',
-                photoList: [],
-                iconList:[],
-                wordList: []
+            form: {
+                name: '',
+                region: '',
+                date1: '',
+                date2: '',
+                delivery: false,
+                type: [],
+                resource: '',
+                desc: ''
             },
+            formLabelWidth: '120px',
+            fileList: [],
+            file: {},
             dialogImageUrl: '',
-            dialogVisible: false,
-            WordStr: ''
+            dialogVisible: false
         },
         methods: {
-            // 提交事件
-            FinalSubmit(){
-                console.log(this.uploadData);
-                axios.post("uploadWord", encodeURIComponent(_this.WordStr)
-                ).then(function (value) {
-                    _this.uploadData.wordList = value.data;
-                }).catch(function (err) {
-                    console.info("failed")
-                });
-            },
             BeforeUpLoad(file) {
-                var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
-                const extension = testmsg === 'jpg';
-                const extension2 = testmsg === 'png';
-
-                if (!extension && !extension2) {
-                    alert("仅支持jsp/png格式的照片");
-                    return false;
-                }
+                alert("请选择2M以内的图片！");
+                console.log(file);
                 let size = Math.floor(file.size / 1024);
-                if (size > 2 * 1024) {
+                if (size > 2 * 1024 ) {
                     alert("请选择2M以内的图片！");
                     return false;
                 }
             },
-            // 图标上传事件
-            OnIconSuccess(response, file, fileList) {
-                this.uploadData.iconList.push(file.response.id);
+            OnSuccess(response, file, fileList) {
+                // id
+                console.log(response);
+                console.log(file);
+                console.log(fileList);
             },
-            // 图片上传
-            OnPhotoSuccess(response, file, fileList) {
-                this.uploadData.photoList.push(file.response.id);
-            },
-            // 图标移除事件
-            OnIconRemove(file, fileList) {
-                console.log(file.response.id);
-                var rem_id = file.response.id;
-                this.uploadData.iconList.some((item, i)=>{
-                    if(item==rem_id){
-                        this.uploadData.iconList.splice(i, 1)
-                        //在数组的some方法中，如果return true，就会立即终止这个数组的后续循环
-                        return true
-                    }
-                });
-                axios.get("removePhotoByID?id=" + file.response.id
-                ).then(function (value) {
-                    console.info("success");
-                }).catch(function (err) {
-                    console.info("failed")
-                });
-            },
-            // 图片移除事件
-            OnPhotoRemove(file, fileList) {
-                // 移除
-                console.log(file.response.id);
-                var rem_id = file.response.id;
-                this.uploadData.photoList.some((item, i)=>{
-                    if(item==rem_id){
-                        this.uploadData.photoList.splice(i, 1)
-                        //在数组的some方法中，如果return true，就会立即终止这个数组的后续循环
-                        return true
-                    }
-                });
-                axios.get("removePhotoByID?id=" + file.response.id
-                ).then(function (value) {
-                    console.info("success");
-                }).catch(function (err) {
-                    console.info("failed")
-                });
-
+            OnRemove(file, fileList) {
+                // 移除 fileList的ID
+                console.log(file);
+                console.log(fileList);
+                alert("删除成功！");
             },
             OnPreview(file) {
                 alert("上传成功！");
@@ -172,10 +121,6 @@
             tip(file, fileList) {
                 alert("最多上传6张图片")
             },
-            iconTip(file, fileList) {
-                alert("最多上传1张图标")
-            },
-            // 使用 </el-upload> 上传文件的方法
             addFile() {
                 var _this = this;
                 let inputDOM = this.$refs.inputer;
@@ -203,10 +148,11 @@
                     });
 
             },
-
+            handlePictureCardPreview(file) {
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
+            },
             change: function () {
-                _this = this;
-                _this.uploadData.wordList = null;
                 document.getElementById("document")
                     .addEventListener("change", handleFileSelect, false);
 
@@ -219,14 +165,8 @@
                 }
 
                 function displayResult(result) {
+                    document.getElementById("output").innerHTML = result.value;
                     // 这里做文件上传至个人资料库及文件解析后上传至数据库对应的字段
-                    _this.WordStr = result.value
-                    axios.post("uploadWord", encodeURIComponent(_this.WordStr)
-                    ).then(function (value) {
-                        _this.uploadData.wordList = value.data;
-                    }).catch(function (err) {
-                        console.info("failed")
-                    });
                 }
 
                 function readFileInputEventAsArrayBuffer(event, callback) {
@@ -238,10 +178,20 @@
                     };
                     reader.readAsArrayBuffer(file);
                 }
-            }
+            },
         }
     });
 
+    var vue2 = new Vue({
+        el: "#myapp",
+        data: {
+            test: ""
+        },
+        methods: {
+            Myclick: function () {
 
+            }
+        }
+    })
 </script>
 </html>
